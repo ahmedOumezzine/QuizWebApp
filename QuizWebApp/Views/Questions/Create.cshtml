@@ -1,0 +1,582 @@
+﻿@model QuizWebApp.Models.Question
+
+@{
+    ViewBag.Title = "Create";
+}
+ 
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<h1>Create Question</h1>
+
+<form asp-action="CreateQuestion" method="post" id="form-wizard">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="ExamId" value="@ViewBag.ExamId" />
+    <input type="hidden" name="QuestionType" id="selected-option" value="0" />
+    <div class="step1 step open">
+        <h2>Etape 1</h2>
+
+        <label>Question Type</label>
+
+        <div class=" row form-group ">
+            <div class="col-md-2">
+                <div class="main-div active" id="div1" value="@((int)QuizWebApp.Models.QuestionType.SingleChoice)">
+                    <h6>Single Choice</h6>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="main-div" id="div2" value="@((int)QuizWebApp.Models.QuestionType.MultiChoice)">
+                    <h6>Multiple Choice</h6>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="main-div" id="div3" value="@((int)QuizWebApp.Models.QuestionType.TrueFalse)">
+                    <h6>True/False</h6>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="main-div" id="div4" value="@((int)QuizWebApp.Models.QuestionType.DragAndDrop)">
+                    <h6>Drag And Drop</h6>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="main-div" id="div5" value="@((int)QuizWebApp.Models.QuestionType.DragAndDrop2)">
+                    <h6>Drag And Drop V2</h6>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="main-div" id="div6" value="@((int)QuizWebApp.Models.QuestionType.FillInBlank)">
+                    <h6>Fill In Blank</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Description"> Question Description</label>
+            <textarea asp-for="QuestionDescription" name="QuestionDescription" class="form-control" style="min-width: 100%"></textarea>
+        </div>
+        <button class="next">Suivant</button>
+    </div>
+    <div class="step2 step">
+        <h2>Etape 2</h2>
+
+        <div class="form-group">
+            <label asp-for="QuestionType">Question Type</label>
+            <div class="hidden-div row" id="div1-content" style="display: block !important;">
+                <button type="button" class="btn btn-primary" id="addChoiceButton" style=" margin-left: auto; display: flex; justify-content: flex-end; ">Add Choice</button>
+
+                <div id="singleChoicesContainer" class="row"></div>
+            </div>
+
+            <div class="hidden-div row" id="div2-content">
+                <label asp-for="Choices"></label>
+                <button type="button" class="btn btn-primary" id="addMultiChoiceButton" style=" margin-left: auto; display: flex; justify-content: flex-end; ">Add Choice</button>
+                <div id="multiChoicesContainer" class="row"></div>
+            </div>
+
+            <div class="hidden-div row" id="div3-content">
+                <div class="form-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="IsTrue" value="true" checked />
+                            True
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="IsTrue" value="false" />
+                            False
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="hidden-div row" id="div4-content">
+                <label asp-for="Choices"></label>
+                <button type="button" class="btn btn-primary" id="addDragAndDropButton" style=" margin-left: auto; display: flex; justify-content: flex-end; ">Add Choice</button>
+                <div id="dragAndDropContainer" class="row"></div>
+            </div>
+            <div class="hidden-div row" id="div5-content">
+                <div id="optionsContainer row">
+                    <div class="col-md-6">
+                        <button id="addCorrectOptionButton" class="btn btn-primary">Ajouter une option correcte</button>
+                        <h4>Options correctes :</h4>
+                        <ul id="correctOptions" class="sortable">
+                            <!-- Ici, les options correctes seront ajoutées dynamiquement -->
+                        </ul>
+                    </div>
+                    <div class="col-md-6">
+                        <button id="addFakeOptionButton" class="btn btn-primary">Ajouter une option incorrecte</button>
+                        <h4>Options incorrectes :</h4>
+                        <ul id="fakeOptions">
+                            <!-- Ici, les options incorrectes seront ajoutées dynamiquement -->
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <div class="hidden-div row" id="div6-content">
+                <div>
+                    <label for="description">reponse:</label>
+                    <textarea id="description" name="FillInBlank" class="form-control" rows="4">{q} z  {aa}</textarea>
+                    <button id="add-response">Ajouter réponse</button>
+                </div>
+                <hr />
+                <div id="responses" class="row"></div>
+
+            </div>
+
+        </div>
+
+
+        <button class="previous">previous</button>
+        <button class="next">Suivant</button>
+    </div>
+    <div class="step3 step">
+        <h2>Etape 3</h2>
+
+        <div class="form-group">
+            <label asp-for="Explication">Explication</label>
+            <textarea asp-for="Explication" name="Explication" class="form-control" style="min-width: 100%"></textarea>
+        </div>
+
+        <button class="previous">previous</button>
+
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Create</button>
+
+        </div>
+    </div>
+
+
+
+
+</form>
+@section Styles {
+
+
+    <style>
+        .main-div {
+            background-color: #f1f1f1;
+            margin-bottom: 10px;
+            cursor: pointer;
+            padding: 6px;
+            text-align: center;
+        }
+
+        .hidden-div {
+            display: none;
+        }
+
+        .active {
+            background-color: #333;
+        }
+
+        .main-div h6 {
+            margin-bottom: 16px;
+            margin-top: 16px;
+        }
+        
+        .active h6 { 
+            color: #fff;
+        }
+
+        .input-with-remove {
+            display: flex;
+            align-items: center;
+        }
+
+            .input-with-remove input {
+                flex: 1;
+                margin-right: 10px;
+            }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+            .remove-btn svg {
+                width: 16px;
+                height: 16px;
+                color: red;
+            }
+
+        .correctOption, .fakeOption {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .step {
+            display: none;
+        }
+
+            .step.open {
+                display: block;
+            }
+    </style>
+}
+@section Scripts {
+    <script>
+        const contentDivs = document.querySelectorAll('div[id*="-content"]');
+        contentDivs.forEach((div) => {
+            div.style.display = "none";
+        });
+        // Récupérer tous les éléments avec la classe "main-div"
+        const mainDivs = document.querySelectorAll(".main-div");
+        // Boucler à travers chaque élément "main-div"
+        mainDivs.forEach((div) => {
+            // Ajouter un écouteur d'événements "click"
+            div.addEventListener("click", () => {
+
+                const contentDivs = document.querySelectorAll('div[id*="-content"]');
+                contentDivs.forEach((div) => {
+                    div.style.display = "none";
+                });
+                // Récupérer l'ID de l'élément "hidden-div" correspondant
+                const contentId = div.id + "-content";
+
+                // Récupérer l'élément "hidden-div" correspondant
+                const contentDiv = document.getElementById(contentId);
+                console.log(contentDiv.style.display)
+                // Afficher ou cacher le contenu en fonction de son état actuel
+                if (contentDiv.style.display === "none") {
+                    contentDiv.style.display = "block";
+                } else {
+                    contentDiv.style.display = "none";
+                }
+
+                mainDivs.forEach((div) => {
+                    div.classList.remove("active");
+                });
+                div.classList.add("active");
+                let selectedValue = div.getAttribute("value");
+                document.getElementById('selected-option').value = selectedValue;
+                console.log(selectedValue)
+
+            });
+        });
+
+        $('#addChoiceButton').click(function () {
+            var index = $('#singleChoicesContainer').children().length;
+            var html =
+                '<div class="form-group choice col-md-4">' +
+                '<label name="ChoiceTitle"> Choice ' + (index + 1) + '</label>' +
+                '<div class="input-with-remove">' +
+                '<input class="form-control" name="Choices[' + index + '].ChoiceText" />' +
+                '<button class="remove-btn remove-choice">X</button>' +
+                '</div> ' +
+                '<div>' +
+                '<div class="radio">' +
+                '<label> <input type="checkbox"  name="Choices[' + index + '].IsCorrect" onchange="uncheckOther(this,\'IsCorrect\')" value="false" /> Is Correct </label>' +
+                '</div>';
+            $('#singleChoicesContainer').append(html);
+            $('.remove-choice').on('click', function () {
+                $(this).closest('.choice').remove();
+                // Update option indexes
+                $('#singleChoicesContainer').children().each(function (i, div) {
+                    $(div).find('label[name$="ChoiceTitle"]').text('Option ' + (i + 1));
+                    $(div).find('input[name$=".ChoiceText"]').attr('name', 'Choices[' + i + '].ChoiceText');
+                    $(div).find('input[name$=".IsCorrect"]').attr('name', 'Choices[' + i + '].IsCorrect');
+                    $(div).find('input[name$=".IsCorrect"]').attr('value', i);
+                });
+            });
+
+        });
+
+
+        $('#addMultiChoiceButton').click(function () {
+            var index = $('#multiChoicesContainer').children().length;
+            var html =
+                '<div class="form-group choice col-md-4">' +
+                '<label name="ChoiceTitle"> Choice ' + (index + 1) + '</label>' +
+                '<div class="input-with-remove">' +
+                '<input class="form-control" name="Choices[' + index + '].ChoiceText" />' +
+                '<button class="remove-btn remove-choice">X</button>' +
+                '</div> ' +
+                '<div>' +
+                '<div class="checkbox">' +
+                '<label> <input type="checkbox"  name="Choices[' + index + '].IsCorrect" onchange="handleChange(this)" value="false" /> Is Correct </label>' +
+                '</div>';
+            $('#multiChoicesContainer').append(html);
+            $('.remove-choice').on('click', function () {
+                $(this).closest('.choice').remove();
+                // Update option indexes
+                $('#multiChoicesContainer').children().each(function (i, div) {
+                    $(div).find('label[name$="ChoiceTitle"]').text('Option ' + (i + 1));
+                    $(div).find('input[name$=".ChoiceText"]').attr('name', 'Choices[' + i + '].ChoiceText');
+                    $(div).find('input[name$=".IsCorrect"]').attr('name', 'Choices[' + i + '].IsCorrect');
+                });
+            });
+        });
+
+
+        $('#addDragAndDropButton').click(function () {
+            var index = $('#dragAndDropContainer').children().length;
+            var html =
+                '<div class="form-group choice col-md-4">' +
+                '<label name="ChoiceTitle"> Choice ' + index + '</label>' +
+                '<div class="input-with-remove">' +
+                '<input class="form-control" name="Choices[' + index + '].ChoiceText" />' +
+                '<button class="remove-btn remove-choice">X</button>' +
+                '</div> ' +
+                '<div>' +
+                '<div class="checkbox">' +
+                '<label> <input type="checkbox"  name="Choices[' + index + '].IsCorrect" onchange="handleChange(this)" value="false" /> Is Correct </label>' +
+                '</div>';
+            $('#dragAndDropContainer').append(html);
+            // Remove option button
+            $('.remove-choice').on('click', function () {
+                $(this).closest('.choice').remove();
+                // Update option indexes
+                $('#dragAndDropContainer').children().each(function (i, div) {
+                    $(div).find('label[name$="ChoiceTitle"]').text('Option ' + (i + 1));
+                    $(div).find('input[name$=".ChoiceText"]').attr('name', 'Choices[' + i + '][ChoiceText]');
+                    $(div).find('input[name$=".IsCorrect"]').attr('name', 'Choices[' + i + '][IsCorrect]');
+                    $(div).find('input[name$=".IsCorrect"]').attr('value', i);
+                });
+            });
+        });
+
+
+        $(document).ready(function () {
+            // Initialisation de la liste des options correctes
+            $("#correctOptions").sortable({
+                axis: "y",
+                containment: "parent"
+            });
+
+
+            // Ajout d'une option correcte
+            $("#addCorrectOptionButton").click(function (e) {
+                e.preventDefault();
+                var index = $('#correctOptions').children().length;
+
+                var option = $('<li class="correctOption"><input type="text" name="correctOption[' + index + ']" placeholder="Option correcte" class="form-control"> <button class="removeOptionButton">X</button></li>');
+                $("#correctOptions").append(option);
+
+                // Ajouter un événement de clic pour le bouton X pour supprimer l'option
+                $(".removeOptionButton").click(function (e) {
+                    e.preventDefault();
+                    $(this).parent().remove();
+                    $('#correctOptions').children().each(function (i, div) {
+                        $(div).find('input').attr('name', 'correctOption[' + i + ']');
+                    });
+                });
+            });
+
+            // Ajout d'une option incorrecte
+            $("#addFakeOptionButton").click(function (e) {
+                e.preventDefault();
+                var index = $('#fakeOptions').children().length;
+
+                var option = $('<li class="fakeOption"><input type="text"  name="fakeOption[' + index + ']" placeholder="Option incorrecte" class="form-control"> <button class="removeOptionButton">X</button></li>');
+                $("#fakeOptions").append(option);
+                // Ajouter un événement de clic pour le bouton X pour supprimer l'option
+                $(".removeOptionButton").click(function (e) {
+                    e.preventDefault();
+                    $(this).parent().remove();
+                    $('#fakeOptions').children().each(function (i, div) {
+                        $(div).find('input').attr('name', 'fakeOptions[' + i + ']');
+                    });
+                });
+            });
+
+        });
+
+        const descriptionInput = document.getElementById("description");
+        const parseButton = document.getElementById("add-response");
+        const responsesDiv = document.getElementById("responses");
+
+        parseButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            responsesDiv.innerHTML = "";
+            // récupérer la description saisie
+            const description = descriptionInput.value;
+            let CountIndex = 0;
+            // vérifier si la description contient des crochets
+            if (description.includes("{") && description.includes("}")) {
+                // parcourir la description et détecter les crochets
+                let startIndex = 0;
+                let endIndex = 0;
+                while ((startIndex = description.indexOf("{", endIndex)) !== -1) {
+                    endIndex = description.indexOf("}", startIndex);
+                    if (endIndex === -1) break;
+
+                    // extraire le contenu entre les crochets
+                    const divRoot = document.createElement("div");
+                    divRoot.style = " padding-top: 8px; padding-bottom: 5px; ";
+                    divRoot.className = "col-md-4";
+
+                    // créer une div pour l'option
+                    const optionDiv = document.createElement("div");
+                    optionDiv.classList.add("response-option-" + CountIndex);
+
+                    const optiontextbuttonDiv = document.createElement("div");
+                    optiontextbuttonDiv.style = " padding-top: 5px; padding-bottom: 5px; ";
+
+                    // ajouter un champ de saisie pour le texte de l'option
+                    const optionInput = document.createElement("input");
+                    optionInput.type = "text";
+                    optionInput.name = "responseOption[" + CountIndex + "][0].ChoiceText";
+                    optionInput.classList.add("option-text");
+                    optiontextbuttonDiv.appendChild(optionInput);
+                    // ajouter un champ de saisie pour indiquer si l'option est correcte ou non
+                    const optionIsCorrectInput = document.createElement("input");
+                    optionIsCorrectInput.type = "checkbox";
+                    optionIsCorrectInput.setAttribute("name", "responseOption[" + CountIndex + "][0].IsCorrect");
+                    optionIsCorrectInput.classList.add("option-is-correct");
+                    optionIsCorrectInput.classList.add("response-option-r-" + CountIndex);
+                    optionIsCorrectInput.setAttribute("onChange", "handleChangeFillInBlank(this," + CountIndex + ")");
+                    optionIsCorrectInput.value = "false";
+                    optiontextbuttonDiv.appendChild(optionIsCorrectInput);
+
+                    // ajouter un bouton pour supprimer l'option
+                    const optionDeleteButton = document.createElement("button");
+                    optionDeleteButton.type = "button";
+                    optionDeleteButton.classList.add("option-delete");
+                    optionDeleteButton.innerText = "Supprimer";
+                    optionDeleteButton.dataset.value = CountIndex;
+                    optionDeleteButton.addEventListener("click", () => {
+                        optionDiv.removeChild(optiontextbuttonDiv);
+                        var datasetValue = optionDeleteButton.dataset.value;
+                        $('.response-option-' + datasetValue).children().each(function (i, div) {
+                            $(div).find('input[name$=".ChoiceText"]').attr('name', 'responseOption[' + CountIndex + '][' + i + '][ChoiceText]');
+                            $(div).find('input[name$=".IsCorrect"]').attr('name', 'responseOption[' + CountIndex + '][' + i + '][IsCorrect]');
+                            $(div).find('input[name$=".IsCorrect"]').attr('value', i);
+                        });
+                    });
+                    optiontextbuttonDiv.appendChild(optionDeleteButton);
+                    optionDiv.appendChild(optiontextbuttonDiv);
+
+
+
+                    // ajouter la div d'option à la liste de réponses
+                    divRoot.appendChild(optionDiv);
+
+
+                    // ajouter un bouton pour ajouter une nouvelle option
+                    const addOptionButton = document.createElement("button");
+                    addOptionButton.dataset.value = CountIndex;
+                    addOptionButton.type = "button";
+                    addOptionButton.classList.add("add-option");
+                    addOptionButton.innerText = "Ajouter une option";
+                    addOptionButton.addEventListener("click", () => {
+                        var datasetValue = addOptionButton.dataset.value;
+                        var index = $('.response-option-' + datasetValue).children().length;
+                        const optiontextbuttonDiv = document.createElement("div");
+                        optiontextbuttonDiv.style = " padding-top: 5px; padding-bottom: 5px; ";
+                        // créer un champ de saisie pour la nouvelle option
+                        const newOptionInput = document.createElement("input");
+                        newOptionInput.type = "text";
+                        newOptionInput.name = "responseOption[" + datasetValue + "][" + index + "].ChoiceText";
+                        newOptionInput.classList.add("option-text");
+                        optiontextbuttonDiv.appendChild(newOptionInput);
+
+                        // ajouter un champ de saisie pour indiquer si l'option est correcte ou non
+                        const optionIsCorrectInput = document.createElement("input");
+                        optionIsCorrectInput.type = "checkbox";
+                        optionIsCorrectInput.setAttribute("onChange", "handleChangeFillInBlank(this," + datasetValue + ")");
+                        optionIsCorrectInput.value = "false";
+                        optionIsCorrectInput.setAttribute("name", "responseOption[" + datasetValue + "][" + index + "].IsCorrect");
+                        optionIsCorrectInput.classList.add("option-is-correct");
+                        optionIsCorrectInput.classList.add("response-option-r-" + datasetValue);
+                        optiontextbuttonDiv.appendChild(optionIsCorrectInput);
+
+
+                        // créer un bouton pour supprimer l'option
+                        const optionDeleteButton = document.createElement("button");
+                        optionDeleteButton.type = "button";
+                        optionDeleteButton.classList.add("option-delete");
+                        addOptionButton.dataset.value = datasetValue;
+                        optionDeleteButton.innerText = "Supprimer";
+                        optionDeleteButton.addEventListener("click", () => {
+                            optionDiv.removeChild(optiontextbuttonDiv);
+                            var datasetValue = optionDeleteButton.dataset.value;
+                            $('.response-option-' + datasetValue).children().each(function (i, div) {
+                                $(div).find('input[name$=".ChoiceText"]').attr('name', 'responseOption[' + CountIndex + '][' + i + '][ChoiceText]');
+                                $(div).find('input[name$=".IsCorrect"]').attr('name', 'responseOption[' + CountIndex + '][' + i + '][IsCorrect]');
+                                $(div).find('input[name$=".IsCorrect"]').attr('value', i);
+                            });
+
+                        });
+                        optiontextbuttonDiv.appendChild(optionDeleteButton);
+                        optionDiv.appendChild(optiontextbuttonDiv);
+                    });
+                    divRoot.appendChild(addOptionButton);
+                    responsesDiv.appendChild(divRoot);
+                    CountIndex = CountIndex + 1;
+                }
+            }
+        });
+
+
+    </script>
+    <script>
+        const steps = document.querySelectorAll(".step");
+        let currentStep = 0;
+
+        steps[currentStep].classList.add("open");
+
+        const nextButtons = document.querySelectorAll(".next");
+
+        nextButtons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (currentStep < steps.length - 1) {
+                    steps[currentStep].classList.remove("open");
+                    currentStep++;
+                    steps[currentStep].classList.add("open");
+                }
+            });
+        });
+        const previousButtons = document.querySelectorAll(".previous");
+
+        previousButtons.forEach((button) => {
+            button.addEventListener("click", (e) => {
+                e.preventDefault();
+                if (currentStep > 0) {
+                    steps[currentStep].classList.remove("open");
+                    currentStep--;
+                    steps[currentStep].classList.add("open");
+                }
+            });
+        });
+        function handleChange(checkbox) {
+            if (checkbox.checked) {
+                checkbox.value = true;
+            } else {
+                checkbox.value = false;
+            }
+            console.log(checkbox)
+        }
+
+        function handleChangeFillInBlank(currentCheckbox, count) {
+            let checkboxes = document.querySelectorAll('input[class*="response-option-r-' + count + '"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != currentCheckbox) {
+                    checkboxes[i].checked = false;
+                }
+            }
+            handleChange(currentCheckbox);
+        }
+
+        function uncheckOther(currentCheckbox, name) {
+            let checkboxes = document.querySelectorAll('input[name*="' + name + '"]');
+            for (var i = 0; i < checkboxes.length; i++) {
+                if (checkboxes[i] != currentCheckbox) {
+                    checkboxes[i].checked = false;
+                }
+            }
+            handleChange(currentCheckbox);
+        }
+    </script>
+}

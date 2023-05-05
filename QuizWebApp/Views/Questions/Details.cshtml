@@ -1,0 +1,90 @@
+﻿@model QuizWebApp.Models.Question
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Question</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Exam.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Exam.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuestionDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.QuestionType)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.QuestionType)
+        </dd>
+
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Explication)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Explication)
+        </dd>
+
+    </dl>
+</div>
+<hr />
+
+@if (Model.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
+{
+<br />
+<label>
+    FillInBlank
+</label> @Model.FillInBlank
+<br />
+
+foreach (var item in Model.Choices.GroupBy(x => x.GroupBy))
+{
+    <hr />
+    <label>@item.Key</label>
+    <br />
+    foreach (var chid in item)
+    {
+        <label>@chid.ChoiceText</label>
+
+        @chid.IsCorrect
+        <br />
+    }
+
+
+
+
+}
+}
+else
+{
+foreach (var item in Model.Choices)
+{
+    <label>@item.ChoiceText</label>
+
+    @item.IsCorrect
+    <br />
+}
+}
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index", new { ExamId = Model.ExamId })
+</p>

@@ -1,0 +1,33 @@
+﻿@model QuizWebApp.Models.Exam
+
+@{
+    ViewBag.Title = "Details";
+}
+ 
+<div class="container">
+    <div class="row">
+        <div class="col-md-7">
+            <h4>@Model.Code @Model.Name</h4>
+            <p class="text-70">
+                @Model.Description
+            </p>
+        </div>
+        <div class="col-md-5">
+            <h4>Les compétences</h4>
+            @Model.SkillsMeasured
+
+        </div>
+    </div>
+</div>
+
+<div class="page-section bg-gradient-purple border-top-2">
+    <div class="container page__container p-0-xs">
+        <div class="row col-lg-12 ">
+
+            <div class="col-sm-12 d-flex flex-column align-items-center justify-content-center">
+                <a href="@Url.Action("Take", "Home", new {Id = Model.Id})" class="btn btn-outline-white mb-8pt">Passer l'examen</a>
+
+            </div>
+        </div>
+    </div>
+</div>

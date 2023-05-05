@@ -1,0 +1,18 @@
+﻿namespace QuizWebApp.Migrations
+{
+    using System;
+    using System.Data.Entity.Migrations;
+    
+    public partial class Init2 : DbMigration
+    {
+        public override void Up()
+        {
+            AddColumn("dbo.Choices", "GroupBy", c => c.String());
+        }
+        
+        public override void Down()
+        {
+            DropColumn("dbo.Choices", "GroupBy");
+        }
+    }
+}

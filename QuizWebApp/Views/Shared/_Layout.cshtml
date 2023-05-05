@@ -1,0 +1,141 @@
+﻿<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewBag.title</title>
+
+    <!-- Prevent the demo from appearing in search engines -->
+    <meta name="robots" content="noindex">
+
+    <!-- Perfect Scrollbar -->
+    <link type="text/css" href="~/Content/vendor/perfect-scrollbar.css" rel="stylesheet">
+
+    <!-- Fix Footer CSS -->
+    <link type="text/css" href="~/Content/vendor/fix-footer.css" rel="stylesheet">
+
+    <!-- Material Design Icons -->
+    <link type="text/css" href="~/Content/css/material-icons.css" rel="stylesheet">
+    <link type="text/css" href="~/Content/css/material-icons.rtl.css" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link type="text/css" href="~/Content/css/fontawesome.css" rel="stylesheet">
+    <link type="text/css" href="~/Content/css/fontawesome.rtl.css" rel="stylesheet">
+
+    <!-- Preloader -->
+    <link type="text/css" href="~/Content/css/preloader.css" rel="stylesheet">
+    <link type="text/css" href="~/Content/css/preloader.rtl.css" rel="stylesheet">
+
+    <!-- App CSS -->
+    <link type="text/css" href="~/Content/css/app.css" rel="stylesheet">
+    <link type="text/css" href="~/Content/css/app.rtl.css" rel="stylesheet">
+
+
+
+    @RenderSection("Styles", false)
+
+</head>
+
+<body class="layout-navbar-mini-fixed-bottom" style="">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div class="preloader" style="display: none;">
+        <div class="sk-double-bounce">
+            <div class="sk-child sk-double-bounce1"></div>
+            <div class="sk-child sk-double-bounce2"></div>
+        </div>
+    </div>
+
+    <!-- Header Layout -->
+    <div class="mdk-header-layout js-mdk-header-layout" data-domfactory-upgraded="mdk-header-layout">
+
+        <!-- Header -->
+
+        @Html.Partial("_Header")
+
+        <!-- // END Header -->
+
+        <div class="mdk-header-layout__content page-content pb-0">
+
+
+            <div class="mdk-box bg-dark mdk-box--bg-gradient-primary js-mdk-box mb-0">
+
+
+                <div class="hero py-64pt text-center text-sm-left">
+                    <div class="container">
+                        <div class="d-flex flex-column flex-sm-row">
+
+                            <div class="order-1 order-sm-0">
+                                <h1 class="text-white"> @ViewBag.title</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Header Layout Content -->
+        <div class="container page__container page-section ">
+
+
+
+
+
+
+            @RenderBody()
+
+
+
+
+
+        </div>
+
+        @Html.Partial("_Footer")
+        <!-- // END Header Layout Content -->
+
+    </div>
+    <!-- // END Header Layout -->
+    <!-- jQuery -->
+    <script src="~/Content/vendor/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="~/Content/vendor/popper.min.js"></script>
+    <script src="~/Content/vendor/bootstrap.min.js"></script>
+
+    @RenderSection("Scripts", false)
+
+
+
+</body>
+</html>

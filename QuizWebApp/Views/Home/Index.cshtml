@@ -1,0 +1,40 @@
+﻿@model IEnumerable<QuizWebApp.Models.Exam>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+
+<div class="row mb-lg-8pt">
+
+
+
+    @foreach (var item in Model)
+    {
+
+        <div class="col-sm-6">
+
+            <div class="card card-path js-overlay stack stack--1">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <div class="flex">
+                            <div class="d-flex align-items-center"> 
+                                <div class="flex">
+                                    <div class="card-title text-body mb-0">@item.Name</div>
+                                    <div class="text-muted d-flex lh-1">  @item.Code</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="@Url.Action("Details", "Home", new {Id = item.Id})" class="ml-4pt btn btn-link text-secondary">Resume</a>
+                    </div>
+                </div>
+            </div> 
+
+        </div>
+    }
+
+
+
+</div>
