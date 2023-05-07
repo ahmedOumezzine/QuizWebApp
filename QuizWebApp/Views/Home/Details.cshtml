@@ -3,19 +3,28 @@
 @{
     ViewBag.Title = "Details";
 }
- 
+
 <div class="container">
     <div class="row">
         <div class="col-md-7">
-            <h4>@Model.Code @Model.Name</h4>
+            <h4>@Model.Code : @Model.Name</h4>
             <p class="text-70">
                 @Model.Description
             </p>
         </div>
         <div class="col-md-5">
-            <h4>Les compétences</h4>
-            @Model.SkillsMeasured
-
+            <h4>
+                What you’ll learn
+            </h4>
+            <ul class="list-unstyled">
+                @foreach (var item in Model.Skills)
+                {
+                <li>
+                    <span class="material-icons text-50 mr-8pt">check</span>
+                    <span class="text-70"> @item.Name</span>
+                </li>
+                }
+            </ul>
         </div>
     </div>
 </div>
@@ -26,7 +35,6 @@
 
             <div class="col-sm-12 d-flex flex-column align-items-center justify-content-center">
                 <a href="@Url.Action("Take", "Home", new {Id = Model.Id})" class="btn btn-outline-white mb-8pt">Passer l'examen</a>
-
             </div>
         </div>
     </div>

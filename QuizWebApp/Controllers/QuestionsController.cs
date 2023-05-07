@@ -1,17 +1,16 @@
-﻿using System;
+﻿using QuizWebApp.Models;
+using QuizWebApp.ViewModels;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
-using QuizWebApp.Models;
-using QuizWebApp.ViewModels;
 using Question = QuizWebApp.Models.Question;
 
 namespace QuizWebApp.Controllers
 {
+    [Authorize]
     public class QuestionsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -20,7 +19,7 @@ namespace QuizWebApp.Controllers
         public ActionResult Index(int ExamId)
         {
             ViewBag.ExamId = ExamId;
-            var questions = db.questions.Include(q => q.Exam).Where(x=>x.ExamId == ExamId);
+            var questions = db.questions.Include(q => q.Exam).Where(x => x.ExamId == ExamId);
             return View(questions.ToList());
         }
 
@@ -31,7 +30,7 @@ namespace QuizWebApp.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Question question = db.questions.Include(x => x.Exam).Include(x => x.Choices).Where(x=>x.Id==id).FirstOrDefault();
+            Question question = db.questions.Include(x => x.skill).Include(x => x.Exam).Include(x => x.Choices).Where(x => x.Id == id).FirstOrDefault();
             if (question == null)
             {
                 return HttpNotFound();
@@ -43,15 +42,16 @@ namespace QuizWebApp.Controllers
         public ActionResult Create(int ExamId)
         {
             ViewBag.ExamId = ExamId;
+            ViewBag.SkillId = new SelectList(db.skills.Where(x => x.ExamId == ExamId), "Id", "Name");
             return View();
         }
 
         // POST: Questions/Create
-        // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour 
+        // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create( CreateQuestionViewModel model)
+        public ActionResult Create(CreateQuestionViewModel model)
         {
             var question = new Question();
             if (ModelState.IsValid)
@@ -61,6 +61,7 @@ namespace QuizWebApp.Controllers
                 question.Explication = model.Explication;
                 question.FillInBlank = model.FillInBlank;
                 question.ExamId = model.ExamId;
+                question.SkillId = model.SkillId;
                 question.Choices = new List<Models.Choice>();
                 if (model.QuestionType == QuestionType.SingleChoice || model.QuestionType == QuestionType.MultiChoice || model.QuestionType == QuestionType.DragAndDrop)
                 {
@@ -116,19 +117,20 @@ namespace QuizWebApp.Controllers
                             choice.ChoiceText = itemchild.ChoiceText;
                             choice.IsCorrect = itemchild.IsCorrect;
                             choice.Question = question;
-                            choice.GroupBy = "question_"+item.i; 
+                            choice.GroupBy = "question_" + item.i;
                             question.Choices.Add(choice);
                         }
                     }
-                    
                 }
 
                 db.questions.Add(question);
                 var count = db.SaveChanges();
-                return RedirectToAction("Index", new { ExamId = question.ExamId }) ;
+                return RedirectToAction("Index", new { ExamId = question.ExamId });
             }
 
-            ViewBag.ExamId = new SelectList(db.exams, "Id", "Name", question.ExamId);
+            ViewBag.ExamId = question.ExamId;
+            ViewBag.SkillId = new SelectList(db.skills.Where(x => x.ExamId == question.ExamId), "Id", "Name");
+
             return View(question);
         }
 
@@ -144,16 +146,18 @@ namespace QuizWebApp.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.SkillId = new SelectList(db.skills.Where(x => x.ExamId == ExamId), "Id", "Name");
+
             ViewBag.ExamId = ExamId;
             return View(question);
         }
 
         // POST: Questions/Edit/5
-        // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour 
+        // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,QuestionDescription,QuestionType,ExamId")] Question question)
+        public ActionResult Edit([Bind(Include = "Id,QuestionDescription,QuestionType,ExamId,SkillId")] Question question)
         {
             if (ModelState.IsValid)
             {
@@ -161,7 +165,9 @@ namespace QuizWebApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index", new { ExamId = question.ExamId });
             }
-            ViewBag.ExamId = new SelectList(db.exams, "Id", "Name", question.ExamId);
+            ViewBag.ExamId = question.ExamId;
+            ViewBag.Skills = new SelectList(db.skills.Where(x => x.ExamId == question.ExamId), "Id", "Name");
+
             return View(question);
         }
 

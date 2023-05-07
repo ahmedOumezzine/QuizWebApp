@@ -1,8 +1,8 @@
-﻿using System.Data.Entity;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace QuizWebApp.Models
 {
@@ -31,7 +31,9 @@ namespace QuizWebApp.Models
         }
 
         public DbSet<Exam> exams { get; set; }
+        public DbSet<Skill> skills { get; set; }
         public DbSet<Question> questions { get; set; }
         public DbSet<Choice> choices { get; set; }
+        public DbSet<Reponse> reponses { get; set; }
     }
 }

@@ -173,32 +173,33 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\QuestionsController.cs" />
+    <Compile Include="Controllers\SkillsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202305040157277_Init.cs" />
-    <Compile Include="Migrations\202305040157277_Init.designer.cs">
-      <DependentUpon>202305040157277_Init.cs</DependentUpon>
+    <Compile Include="Migrations\202305061531281_Init.cs" />
+    <Compile Include="Migrations\202305061531281_Init.designer.cs">
+      <DependentUpon>202305061531281_Init.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202305040235336_Init2.cs" />
-    <Compile Include="Migrations\202305040235336_Init2.designer.cs">
-      <DependentUpon>202305040235336_Init2.cs</DependentUpon>
+    <Compile Include="Migrations\202305061547430_Init2.cs" />
+    <Compile Include="Migrations\202305061547430_Init2.designer.cs">
+      <DependentUpon>202305061547430_Init2.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202305040241009_Init3.cs" />
-    <Compile Include="Migrations\202305040241009_Init3.designer.cs">
-      <DependentUpon>202305040241009_Init3.cs</DependentUpon>
+    <Compile Include="Migrations\202305062332202_Init3.cs" />
+    <Compile Include="Migrations\202305062332202_Init3.designer.cs">
+      <DependentUpon>202305062332202_Init3.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202305040258104_Init4.cs" />
-    <Compile Include="Migrations\202305040258104_Init4.designer.cs">
-      <DependentUpon>202305040258104_Init4.cs</DependentUpon>
+    <Compile Include="Migrations\202305062334092_Init4.cs" />
+    <Compile Include="Migrations\202305062334092_Init4.designer.cs">
+      <DependentUpon>202305062334092_Init4.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202305042235244_inti55.cs" />
-    <Compile Include="Migrations\202305042235244_inti55.designer.cs">
-      <DependentUpon>202305042235244_inti55.cs</DependentUpon>
+    <Compile Include="Migrations\202305062340116_Init5.cs" />
+    <Compile Include="Migrations\202305062340116_Init5.designer.cs">
+      <DependentUpon>202305062340116_Init5.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\202305042308037_inti5533.cs" />
-    <Compile Include="Migrations\202305042308037_inti5533.designer.cs">
-      <DependentUpon>202305042308037_inti5533.cs</DependentUpon>
+    <Compile Include="Migrations\202305070020348_Init6.cs" />
+    <Compile Include="Migrations\202305070020348_Init6.designer.cs">
+      <DependentUpon>202305070020348_Init6.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -210,6 +211,10 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\aspnet-QuizWebApp-20230428073442.mdf" />
+    <Content Include="App_Data\aspnet-QuizWebApp-20230428073442_log.ldf">
+      <DependentUpon>aspnet-QuizWebApp-20230428073442.mdf</DependentUpon>
+    </Content>
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -539,9 +544,12 @@
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Home\Details.cshtml" />
     <Content Include="Views\Home\Take.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
+    <Content Include="Views\Skills\Create.cshtml" />
+    <Content Include="Views\Skills\Delete.cshtml" />
+    <Content Include="Views\Skills\Details.cshtml" />
+    <Content Include="Views\Skills\Edit.cshtml" />
+    <Content Include="Views\Skills\Index.cshtml" />
+    <Content Include="Views\Home\Resultat.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -557,23 +565,23 @@
     <Content Include="Scripts\jquery-3.4.1.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\202305040157277_Init.resx">
-      <DependentUpon>202305040157277_Init.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202305061531281_Init.resx">
+      <DependentUpon>202305061531281_Init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202305040235336_Init2.resx">
-      <DependentUpon>202305040235336_Init2.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202305061547430_Init2.resx">
+      <DependentUpon>202305061547430_Init2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202305040241009_Init3.resx">
-      <DependentUpon>202305040241009_Init3.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202305062332202_Init3.resx">
+      <DependentUpon>202305062332202_Init3.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202305040258104_Init4.resx">
-      <DependentUpon>202305040258104_Init4.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202305062334092_Init4.resx">
+      <DependentUpon>202305062334092_Init4.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202305042235244_inti55.resx">
-      <DependentUpon>202305042235244_inti55.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202305062340116_Init5.resx">
+      <DependentUpon>202305062340116_Init5.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\202305042308037_inti5533.resx">
-      <DependentUpon>202305042308037_inti5533.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\202305070020348_Init6.resx">
+      <DependentUpon>202305070020348_Init6.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

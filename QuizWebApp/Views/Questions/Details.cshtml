@@ -17,6 +17,13 @@
         <dd>
             @Html.DisplayFor(model => model.Exam.Name)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.skill.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.skill.Name)
+        </dd>
 
         <dt>
             @Html.DisplayNameFor(model => model.QuestionDescription)
@@ -34,7 +41,6 @@
             @Html.DisplayFor(model => model.QuestionType)
         </dd>
 
-
         <dt>
             @Html.DisplayNameFor(model => model.Explication)
         </dt>
@@ -42,46 +48,42 @@
         <dd>
             @Html.DisplayFor(model => model.Explication)
         </dd>
-
     </dl>
 </div>
 <hr />
 
 @if (Model.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
 {
-<br />
-<label>
-    FillInBlank
-</label> @Model.FillInBlank
-<br />
-
-foreach (var item in Model.Choices.GroupBy(x => x.GroupBy))
-{
-    <hr />
-    <label>@item.Key</label>
     <br />
-    foreach (var chid in item)
+    <label>
+        FillInBlank
+    </label> @Model.FillInBlank
+    <br />
+
+    foreach (var item in Model.Choices.GroupBy(x => x.GroupBy))
     {
-        <label>@chid.ChoiceText</label>
-
-        @chid.IsCorrect
+        <hr />
+        <label>@item.Key</label>
         <br />
+        foreach (var chid in item)
+        {
+            <label>@chid.ChoiceText</label>
+
+            @chid.IsCorrect
+            <br />
+        }
+
     }
-
-
-
-
-}
 }
 else
 {
-foreach (var item in Model.Choices)
-{
-    <label>@item.ChoiceText</label>
+    foreach (var item in Model.Choices)
+    {
+        <label>@item.ChoiceText</label>
 
-    @item.IsCorrect
-    <br />
-}
+        @item.IsCorrect
+        <br />
+    }
 }
 
 <p>

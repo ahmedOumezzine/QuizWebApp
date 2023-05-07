@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Owin.Security;
+using QuizWebApp.Models;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
-using QuizWebApp.Models;
 
 namespace QuizWebApp.Controllers
 {
@@ -32,9 +31,9 @@ namespace QuizWebApp.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -333,7 +332,8 @@ namespace QuizWebApp.Controllers
             base.Dispose(disposing);
         }
 
-#region Applications d'assistance
+        #region Applications d'assistance
+
         // Utilisé(e) pour la protection XSRF lors de l'ajout de connexions externes
         private const string XsrfKey = "XsrfId";
 
@@ -384,6 +384,6 @@ namespace QuizWebApp.Controllers
             Error
         }
 
-#endregion
+        #endregion Applications d'assistance
     }
 }

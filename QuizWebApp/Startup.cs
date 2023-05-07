@@ -2,6 +2,7 @@
 using Owin;
 
 [assembly: OwinStartupAttribute(typeof(QuizWebApp.Startup))]
+
 namespace QuizWebApp
 {
     public partial class Startup

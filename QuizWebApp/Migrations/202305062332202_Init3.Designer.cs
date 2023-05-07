@@ -13,7 +13,7 @@ namespace QuizWebApp.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "202305040241009_Init3"; }
+            get { return "202305062332202_Init3"; }
         }
         
         string IMigrationMetadata.Source

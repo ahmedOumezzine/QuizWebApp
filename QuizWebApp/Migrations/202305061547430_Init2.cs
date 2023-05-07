@@ -1,18 +1,17 @@
 ﻿namespace QuizWebApp.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
-    public partial class inti55 : DbMigration
+
+    public partial class Init2 : DbMigration
     {
         public override void Up()
         {
-            AddColumn("dbo.Exams", "Code", c => c.String());
+            DropColumn("dbo.Exams", "SkillsMeasured");
         }
-        
+
         public override void Down()
         {
-            DropColumn("dbo.Exams", "Code");
+            AddColumn("dbo.Exams", "SkillsMeasured", c => c.String());
         }
     }
 }

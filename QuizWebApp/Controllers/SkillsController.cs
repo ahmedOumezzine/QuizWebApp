@@ -1,4 +1,5 @@
 ﻿using QuizWebApp.Models;
+using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -6,110 +7,115 @@ using System.Web.Mvc;
 
 namespace QuizWebApp.Controllers
 {
-    [Authorize]
-    public class ExamsController : Controller
+    public class SkillsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Exams
-        public ActionResult Index()
+        // GET: Skills
+        public ActionResult Index(int ExamId)
         {
-            return View(db.exams.ToList());
+            ViewBag.ExamId = ExamId;
+            var skills = db.skills.Include(q => q.Exam).Where(x => x.ExamId == ExamId);
+            return View(skills.ToList());
         }
 
-        // GET: Exams/Details/5
+        // GET: Skills/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Exam exam = db.exams.Find(id);
-            if (exam == null)
+            Skill skill = db.skills.Find(id);
+            if (skill == null)
             {
                 return HttpNotFound();
             }
-            return View(exam);
+            return View(skill);
         }
 
-        // GET: Exams/Create
-        public ActionResult Create()
+        // GET: Skills/Create
+        public ActionResult Create(int ExamId)
         {
+            ViewBag.ExamId = ExamId;
             return View();
         }
 
-        // POST: Exams/Create
+        // POST: Skills/Create
         // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Code,Name,Description,SkillsMeasured")] Exam exam)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,ExamId")] Skill skill)
         {
             if (ModelState.IsValid)
             {
-                db.exams.Add(exam);
+                db.skills.Add(skill);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { ExamId = skill.ExamId });
             }
 
-            return View(exam);
+            ViewBag.ExamId = skill.ExamId;
+            return View(skill);
         }
 
-        // GET: Exams/Edit/5
+        // GET: Skills/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Exam exam = db.exams.Find(id);
-            if (exam == null)
+            Skill skill = db.skills.Find(id);
+            if (skill == null)
             {
                 return HttpNotFound();
             }
-            return View(exam);
+            return View(skill);
         }
 
-        // POST: Exams/Edit/5
+        // POST: Skills/Edit/5
         // Afin de déjouer les attaques par survalidation, activez les propriétés spécifiques auxquelles vous voulez établir une liaison. Pour
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Code,Name,Description,SkillsMeasured")] Exam exam)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,ExamId")] Skill skill)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(exam).State = EntityState.Modified;
+                db.Entry(skill).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { ExamId = skill.ExamId });
             }
-            return View(exam);
+            ViewBag.ExamId = skill.ExamId;
+            return View(skill);
         }
 
-        // GET: Exams/Delete/5
+        // GET: Skills/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Exam exam = db.exams.Find(id);
-            if (exam == null)
+            Skill skill = db.skills.Find(id);
+            if (skill == null)
             {
                 return HttpNotFound();
             }
-            return View(exam);
+            return View(skill);
         }
 
-        // POST: Exams/Delete/5
+        // POST: Skills/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Exam exam = db.exams.Find(id);
-            db.exams.Remove(exam);
+            Skill skill = db.skills.Find(id);
+            var ExamId = skill.ExamId;
+            db.skills.Remove(skill);
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { ExamId = ExamId });
         }
 
         protected override void Dispose(bool disposing)

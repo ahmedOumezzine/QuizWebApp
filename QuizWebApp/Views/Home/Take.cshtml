@@ -4,106 +4,122 @@
     ViewBag.Title = "Take";
 }
 
-@foreach (var item in Model)
+@using (Html.BeginForm())
 {
+    @Html.AntiForgeryToken()
+    <input name="ExamId" type="hidden" value="@ViewBag.ExamId" />
 
-    <div class="col-sm-12">
-        @item.QuestionDescription <br />
-        @if (item.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
-        {
-            <br />
-            string razorCode = item.FillInBlank;
-            string newRazorCode = "";
-            int count = 0;
-            int question = 0;
+    foreach (var item in Model.Select((value, i) => new { i, value }))
+    {
 
-            for (int i = 0; i < razorCode.Length; i++)
+        <div class="col-sm-12">
+            <input type="hidden" name="question[@item.i]" value="@item.value.Id">
+            @item.value.QuestionDescription <br />
+            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
             {
-                if (razorCode[i] == '{')
-                {
-                    count++;
-                    newRazorCode += "<select name=\"cars\" id=\"cars\">";
-                }
-                else if (razorCode[i] == '}')
-                {
-                    count--;
-                    newRazorCode += "}";
-                }
-                else
-                {
-                    newRazorCode += razorCode[i];
-                }
+                <br />
+                string razorCode = item.value.FillInBlank;
+                string newRazorCode = "";
+                int count = 0;
+                int question = 0;
 
-                if (count == 0 && newRazorCode.EndsWith("}"))
+                for (int i = 0; i < razorCode.Length; i++)
                 {
-                    foreach (var Choice in item.Choices.Where(x=>x.GroupBy== "question_"+ question))
+                    if (razorCode[i] == '{')
                     {
-                        newRazorCode += "<option value= '" + @Choice.Id+ "'   > " + Choice.ChoiceText + "</option>";
+                        count++;
+                        newRazorCode += "<select name=\"reponse[" + item.i + "][" + question + "]\" id=\"cars\">";
                     }
-                    newRazorCode += "</select>";
-                    question++;
+                    else if (razorCode[i] == '}')
+                    {
+                        count--;
+                        newRazorCode += "}";
+                    }
+                    else
+                    {
+                        newRazorCode += razorCode[i];
+                    }
 
-                }
-            }
-
-            @Html.Raw(newRazorCode)
-
-        }
-        @if (item.QuestionType == QuizWebApp.Models.QuestionType.SingleChoice || item.QuestionType == QuizWebApp.Models.QuestionType.TrueFalse)
-        {
-            foreach (var Choice in item.Choices)
-            {
-                <input type="radio" id="Choice_@Choice.Id" name="reponse" value="@Choice.Id">
-                <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
-                <br />
-            }
-            <hr />
-        }
-        @if (item.QuestionType == QuizWebApp.Models.QuestionType.MultiChoice)
-        {
-            foreach (var Choice in item.Choices)
-            {
-                <input type="checkbox" id="Choice_@Choice.Id" name="reponse" value="@Choice.Id">
-                <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
-                <br />
-            }
-            <hr />
-        }
-
-        @if (item.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop || item.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop2)
-        {
-
-            <div class="facet-container row">
-                <div class="left">
-                    <label>All options</label>
-                    <ul id="allFacets" class="facet-list">
-                        @{
-                            var rnd = new Random();
-                        }
-
-                        @foreach (var Choice in item.Choices.OrderBy(i => rnd.Next()).ToList())
+                    if (count == 0 && newRazorCode.EndsWith("}"))
+                    {
+                        foreach (var Choice in item.value.Choices.Where(x => x.GroupBy == "question_" + question))
                         {
-                            <li class="facet" value="@Choice.Id">@Choice.ChoiceText</li>
-
+                            newRazorCode += "<option value= '" + @Choice.Id + "'   > " + Choice.ChoiceText + "</option>";
                         }
-                    </ul>
+                        newRazorCode += "</select>";
+                        question++;
+
+                    }
+                }
+
+                @Html.Raw(newRazorCode)
+
+            }
+            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.SingleChoice || item.value.QuestionType == QuizWebApp.Models.QuestionType.TrueFalse)
+            {
+                foreach (var Choice in item.value.Choices)
+                {
+                    <input type="radio" id="Choice_@Choice.Id" name="reponse[@item.i]" value="@Choice.Id">
+                    <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
+                    <br />
+                }
+                <hr />
+            }
+            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.MultiChoice)
+            {
+                foreach (var Choice in item.value.Choices)
+                {
+                    <input type="checkbox" id="Choice_@Choice.Id" name="reponse[@item.i]" value="@Choice.Id">
+                    <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
+                    <br />
+                }
+                <hr />
+            }
+
+            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop || item.value.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop2)
+            {
+
+                <div class="facet-container row">
+                    <div class="left">
+                        <label>All options</label>
+                        <ul id="allFacets" class="facet-list">
+                            @{
+                                var rnd = new Random();
+                            }
+
+                            @foreach (var Choice in item.value.Choices.OrderBy(i => rnd.Next()).ToList())
+                            {
+                                <li class="facet" data-question="@item.i" data-value="@Choice.Id">
+                                    @Choice.ChoiceText
+                                    <input type="hidden" value="@Choice.Id">
+                                </li>
+
+                            }
+                        </ul>
+                    </div>
+                    <div class="right">
+                        <label>Your reponse</label>
+                        <ul id="userFacets" class="facet-list">
+                        </ul>
+                    </div>
                 </div>
-                <div class="right">
-                    <label>Your reponse</label>
-                    <ul id="userFacets" class="facet-list">
-                    </ul>
-                </div>
-            </div>
-            <hr />
-        }
+                <hr />
+            }
+        </div>
+
+    }
+
+    <div class="form-group" style=" float: right; ">
+        <input type="submit" value="Create" class="btn btn-primary" />
     </div>
 }
+
 @section Styles {
 
     <style>
         .facet-container {
             width: 330px;
-        } 
+        }
 
         .facet-list {
             list-style-type: none;
@@ -150,23 +166,22 @@
             $("#allFacets, #userFacets").sortable({
                 connectWith: "ul",
                 placeholder: "placeholder",
-                delay: 150
-            })
-                .disableSelection()
-                .dblclick(function (e) {
-                    var item = e.target;
-                    if (e.currentTarget.id === 'allFacets') {
-                        //move from all to user
-                        $(item).fadeOut('fast', function () {
-                            $(item).appendTo($('#userFacets')).fadeIn('slow');
-                        });
+                delay: 150,
+                stop: function (event, ui) {
+                    var li = ui.item.first();
+                    var input = ui.item.find('input');
+
+                    if (event.target.id === 'allFacets') {
+                        let question = li.attr('data-question');
+                        let value = li.attr('data-value');
+                        input.attr('name', 'reponse[' + question + ']');
+
                     } else {
-                        //move from user to all
-                        $(item).fadeOut('fast', function () {
-                            $(item).appendTo($('#allFacets')).fadeIn('slow');
-                        });
+                        input.attr('name', '');
+
                     }
-                });
+                }
+            });
         });
     </script>
 }

@@ -1,0 +1,69 @@
+﻿@model IEnumerable<QuizWebApp.Models.Reponse>
+
+@{
+    ViewBag.Title = "Resultat";
+    var countQuestion = Model.Count();
+    var countQuestionCorrect = Model.Count(x => x.isCorrect);
+    var score = ((double)countQuestionCorrect / countQuestion) * 100.0;
+    var percentage = Convert.ToInt32(Math.Round(score, 0));
+
+}
+
+<h2>Resultat</h2>
+
+countQuestion : @countQuestion
+<br />
+
+countQuestionCorrect : @countQuestionCorrect
+<br />
+
+score : @percentage %
+<br />
+
+@foreach (var item in Model.Select((value, i) => new { i, value }))
+{
+
+    <h2>##</h2>
+    @item.value.Question.QuestionDescription
+    <br />
+    if (item.value.Question.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
+    {
+        <br />
+        <label>
+            FillInBlank
+        </label> @item.value.Question.FillInBlank
+        <br />
+
+        foreach (var Choice in item.value.Question.Choices.GroupBy(x => x.GroupBy))
+        {
+            <hr />
+            <label>@Choice.Key</label>
+            <br />
+            foreach (var chid in Choice)
+            {
+                <label>@chid.Id @chid.ChoiceText</label>
+
+                @chid.IsCorrect
+                <br />
+            }
+
+        }
+    }
+    else
+    {
+        foreach (var Choice in item.value.Question.Choices)
+        {
+            <label>@Choice.Id @Choice.ChoiceText</label>
+
+            @Choice.IsCorrect
+            <br />
+        }
+    }
+
+    <br />
+
+    @item.value.reponseId
+    <br />
+    @item.value.isCorrect
+    <hr />
+}
