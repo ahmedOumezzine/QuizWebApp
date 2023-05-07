@@ -3,123 +3,159 @@
 @{
     ViewBag.Title = "Take";
 }
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <input name="ExamId" type="hidden" value="@ViewBag.ExamId" />
 
-    foreach (var item in Model.Select((value, i) => new { i, value }))
-    {
+    <div class="row">
+        <div class="col-md-4">
 
-        <div class="col-sm-12">
-            <input type="hidden" name="question[@item.i]" value="@item.value.Id">
-            @item.value.QuestionDescription <br />
-            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
-            {
-                <br />
-                string razorCode = item.value.FillInBlank;
-                string newRazorCode = "";
-                int count = 0;
-                int question = 0;
-
-                for (int i = 0; i < razorCode.Length; i++)
+            <div class="form-stepper form-stepper-horizontal text-center mx-auto pl-0 row">
+                @foreach (var item in Model.Select((value, i) => new { i, value }))
                 {
-                    if (razorCode[i] == '{')
-                    {
-                        count++;
-                        newRazorCode += "<select name=\"reponse[" + item.i + "][" + question + "]\" id=\"cars\">";
-                    }
-                    else if (razorCode[i] == '}')
-                    {
-                        count--;
-                        newRazorCode += "}";
-                    }
-                    else
-                    {
-                        newRazorCode += razorCode[i];
-                    }
-
-                    if (count == 0 && newRazorCode.EndsWith("}"))
-                    {
-                        foreach (var Choice in item.value.Choices.Where(x => x.GroupBy == "question_" + question))
-                        {
-                            newRazorCode += "<option value= '" + @Choice.Id + "'   > " + Choice.ChoiceText + "</option>";
-                        }
-                        newRazorCode += "</select>";
-                        question++;
-
-                    }
-                }
-
-                @Html.Raw(newRazorCode)
-
-            }
-            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.SingleChoice || item.value.QuestionType == QuizWebApp.Models.QuestionType.TrueFalse)
-            {
-                foreach (var Choice in item.value.Choices)
-                {
-                    <input type="radio" id="Choice_@Choice.Id" name="reponse[@item.i]" value="@Choice.Id">
-                    <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
-                    <br />
-                }
-                <hr />
-            }
-            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.MultiChoice)
-            {
-                foreach (var Choice in item.value.Choices)
-                {
-                    <input type="checkbox" id="Choice_@Choice.Id" name="reponse[@item.i]" value="@Choice.Id">
-                    <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
-                    <br />
-                }
-                <hr />
-            }
-
-            @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop || item.value.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop2)
-            {
-
-                <div class="facet-container row">
-                    <div class="left">
-                        <label>All options</label>
-                        <ul id="allFacets" class="facet-list">
-                            @{
-                                var rnd = new Random();
-                            }
-
-                            @foreach (var Choice in item.value.Choices.OrderBy(i => rnd.Next()).ToList())
-                            {
-                                <li class="facet" data-question="@item.i" data-value="@Choice.Id">
-                                    @Choice.ChoiceText
-                                    <input type="hidden" value="@Choice.Id">
-                                </li>
-
-                            }
-                        </ul>
+                    <div class="form-stepper-@(item.i==0?"active":"unfinished") text-center form-stepper-list" step="@(item.i+1)">
+                        <a class="mx-2">
+                            <span class="form-stepper-circle">
+                                <span>@(item.i+1)</span>
+                            </span>
+                        </a>
                     </div>
-                    <div class="right">
-                        <label>Your reponse</label>
-                        <ul id="userFacets" class="facet-list">
-                        </ul>
-                    </div>
-                </div>
-                <hr />
-            }
+                }
+            </div>
         </div>
+        <div class="col-md-8">
 
-    }
+            <div id="multi-step-form-container">
+                <!-- Step Wise Form Content -->
+                     @foreach (var item in Model.Select((value, i) => new { i, value }))
+                    {
+                        <section id="step-@(item.i+1)" class="form-step @(item.i==0?"":" d-none")">
+                            <h2 class="font-normal">Question @(item.i+1)</h2>
+                            <div class="mt-3">
+                                <div class="col-sm-12">
+                                    <input type="hidden" name="question[@item.i]" value="@item.value.Id">
+                                    @item.value.QuestionDescription <br />
+                                    @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
+                                    {
+                                        <br />
+                                        string razorCode = item.value.FillInBlank;
+                                        string newRazorCode = "";
+                                        int count = 0;
+                                        int question = 0;
 
-    <div class="form-group" style=" float: right; ">
-        <input type="submit" value="Create" class="btn btn-primary" />
+                                        for (int i = 0; i < razorCode.Length; i++)
+                                        {
+                                            if (razorCode[i] == '{')
+                                            {
+                                                count++;
+                                                newRazorCode += "<select name=\"reponse[" + item.i + "][" + question + "]\" id=\"cars\">";
+                                            }
+                                            else if (razorCode[i] == '}')
+                                            {
+                                                count--;
+                                                newRazorCode += "}";
+                                            }
+                                            else
+                                            {
+                                                newRazorCode += razorCode[i];
+                                            }
+
+                                            if (count == 0 && newRazorCode.EndsWith("}"))
+                                            {
+                                                foreach (var Choice in item.value.Choices.Where(x => x.GroupBy == "question_" + question))
+                                                {
+                                                    newRazorCode += "<option value= '" + @Choice.Id + "'   > " + Choice.ChoiceText + "</option>";
+                                                }
+                                                newRazorCode += "</select>";
+                                                question++;
+
+                                            }
+                                        }
+
+                                        @Html.Raw(newRazorCode)
+
+                                    }
+                                    @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.SingleChoice || item.value.QuestionType == QuizWebApp.Models.QuestionType.TrueFalse)
+                                    {
+                                        foreach (var Choice in item.value.Choices)
+                                        {
+                                            <input type="radio" id="Choice_@Choice.Id" name="reponse[@item.i]" value="@Choice.Id">
+                                            <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
+                                            <br />
+                                        } 
+                                    }
+                                    @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.MultiChoice)
+                                    {
+                                        foreach (var Choice in item.value.Choices)
+                                        {
+                                            <input type="checkbox" id="Choice_@Choice.Id" name="reponse[@item.i]" value="@Choice.Id">
+                                            <label for="Choice_@Choice.Id">@Choice.ChoiceText</label>
+                                            <br />
+                                        }
+                                        
+                                    }
+
+                                    @if (item.value.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop || item.value.QuestionType == QuizWebApp.Models.QuestionType.DragAndDrop2)
+                                    {
+
+                                        <div class="facet-container row">
+                                            <div class="left">
+                                                <label>All options</label>
+                                                <ul id="allFacets" class="facet-list">
+                                                    @{
+                                                        var rnd = new Random();
+                                                    }
+
+                                                    @foreach (var Choice in item.value.Choices.OrderBy(i => rnd.Next()).ToList())
+                                                    {
+                                                        <li class="facet" data-question="@item.i" data-value="@Choice.Id">
+                                                            @Choice.ChoiceText
+                                                            <input type="hidden" value="@Choice.Id">
+                                                        </li>
+
+                                                    }
+                                                </ul>
+                                            </div>
+                                            <div class="right">
+                                                <label>Your reponse</label>
+                                                <ul id="userFacets" class="facet-list">
+                                                </ul>
+                                            </div>
+                                        </div>
+                                        
+                                    }
+                                </div>
+                            </div>
+                            <div class="mt-3">
+                                @if (item.i > 0)
+                                {
+                                    <button class="button btn-navigate-form-step" type="button" step_number="@item.i">Prev</button>
+                                }   @if (item.i + 2 <= Model.Count())
+                                {
+                                    <button class="button btn-navigate-form-step" type="button" step_number="@(item.i+2)">Next</button>
+                                }
+                                @if (item.i == Model.Count()-1)
+                                {
+                                    <button class="button submit-btn" type="submit">Save</button>
+                                }
+
+                            </div>
+                        </section>
+                    }
+
+             </div>
+        </div>
     </div>
+    <!-- Form Steps / Progress Bar -->
+
+
+
 }
 
 @section Styles {
 
-    <style>
-        .facet-container {
-            width: 330px;
-        }
+    <style> 
 
         .facet-list {
             list-style-type: none;
@@ -128,7 +164,7 @@
             margin-right: 10px;
             background: #eee;
             padding: 5px;
-            width: 143px;
+            width: 255px;
             min-height: 1.5em;
             font-size: 0.85em;
         }
@@ -137,7 +173,7 @@
                 margin: 5px;
                 padding: 5px;
                 font-size: 1.2em;
-                width: 120px;
+                width: 95%;
             }
 
                 .facet-list li.placeholder {
@@ -157,6 +193,178 @@
         .placeholder {
             border: 1px solid orange;
             background-color: #fffffd;
+        }
+    </style>
+
+    <style>
+        h1 {
+            text-align: center;
+        }
+
+        h2 {
+            margin: 0;
+        }
+         
+        .text-center {
+            text-align: center;
+        }
+
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .pl-0 {
+            padding-left: 0;
+        }
+
+        .button {
+            padding: 0.7rem 1.5rem;
+            border: 1px solid #4361ee;
+            background-color: #4361ee;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            border: 1px solid #0e9594;
+            background-color: #0e9594;
+        }
+
+        .mt-3 {
+            margin-top: 2rem;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        .form-step {
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .font-normal {
+            font-weight: normal;
+        }
+
+        div.form-stepper {
+            counter-reset: section;
+            margin-bottom: 3rem;
+        }
+
+            div.form-stepper .form-stepper-circle {
+                position: relative;
+            }
+
+                div.form-stepper .form-stepper-circle span {
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translateY(-50%) translateX(-50%);
+                }
+
+        .form-stepper-horizontal {
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-pack: justify;
+            -ms-flex-pack: justify; 
+        }
+
+        div.form-stepper > div:not(:last-of-type) {
+            margin-bottom: 0.625rem;
+            -webkit-transition: margin-bottom 0.4s;
+            -o-transition: margin-bottom 0.4s;
+            transition: margin-bottom 0.4s;
+        }
+
+        .form-stepper-horizontal > div:not(:last-of-type) {
+            margin-bottom: 0 !important;
+        }
+
+        .form-stepper-horizontal div {
+            position: relative;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-flex: 1;
+            -ms-flex: 1;
+            -webkit-box-align: start;
+            -ms-flex-align: start;
+            align-items: start;
+            -webkit-transition: 0.5s;
+            transition: 0.5s;
+        }
+
+
+
+
+            .form-stepper-horizontal div:last-child {
+                flex: unset;
+            }
+
+        div.form-stepper div a .form-stepper-circle {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            margin-right: 0;
+            line-height: 1.7rem;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.38);
+            border-radius: 50%;
+        }
+
+        .form-stepper .form-stepper-active .form-stepper-circle {
+            background-color: #4361ee !important;
+            color: #fff;
+        }
+
+        .form-stepper .form-stepper-active .label {
+            color: #4361ee !important;
+        }
+
+        .form-stepper .form-stepper-active .form-stepper-circle:hover {
+            background-color: #4361ee !important;
+            color: #fff !important;
+        }
+
+        .form-stepper .form-stepper-unfinished .form-stepper-circle {
+            background-color: #f8f7ff;
+        }
+
+        .form-stepper .form-stepper-completed .form-stepper-circle {
+            background-color: #0e9594 !important;
+            color: #fff;
+        }
+
+        .form-stepper .form-stepper-completed .label {
+            color: #0e9594 !important;
+        }
+
+        .form-stepper .form-stepper-completed .form-stepper-circle:hover {
+            background-color: #0e9594 !important;
+            color: #fff !important;
+        }
+
+        .form-stepper .form-stepper-active span.text-muted {
+            color: #fff !important;
+        }
+
+        .form-stepper .form-stepper-completed span.text-muted {
+            color: #fff !important;
+        }
+
+        .form-stepper .label {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .form-stepper a {
+            cursor: default;
         }
     </style>
 }
@@ -181,6 +389,80 @@
 
                     }
                 }
+            });
+        });
+    </script>
+    <script>
+        /**
+* Define a function to navigate betweens form steps.
+* It accepts one parameter. That is - step number.
+*/
+        const navigateToFormStep = (stepNumber) => {
+            /**
+             * Hide all form steps.
+             */
+            document.querySelectorAll(".form-step").forEach((formStepElement) => {
+                formStepElement.classList.add("d-none");
+            });
+            /**
+             * Mark all form steps as unfinished.
+             */
+            document.querySelectorAll(".form-stepper-list").forEach((formStepHeader) => {
+                formStepHeader.classList.add("form-stepper-unfinished");
+                formStepHeader.classList.remove("form-stepper-active", "form-stepper-completed");
+            });
+            /**
+             * Show the current form step (as passed to the function).
+             */
+            document.querySelector("#step-" + stepNumber).classList.remove("d-none");
+            /**
+             * Select the form step circle (progress bar).
+             */
+            const formStepCircle = document.querySelector('div[step="' + stepNumber + '"]');
+            /**
+             * Mark the current form step as active.
+             */
+            formStepCircle.classList.remove("form-stepper-unfinished", "form-stepper-completed");
+            formStepCircle.classList.add("form-stepper-active");
+            /**
+             * Loop through each form step circles.
+             * This loop will continue up to the current step number.
+             * Example: If the current step is 3,
+             * then the loop will perform operations for step 1 and 2.
+             */
+            for (let index = 0; index < stepNumber; index++) {
+                /**
+                 * Select the form step circle (progress bar).
+                 */
+                const formStepCircle = document.querySelector('div[step="' + index + '"]');
+                /**
+                 * Check if the element exist. If yes, then proceed.
+                 */
+                if (formStepCircle) {
+                    /**
+                     * Mark the form step as completed.
+                     */
+                    formStepCircle.classList.remove("form-stepper-unfinished", "form-stepper-active");
+                    formStepCircle.classList.add("form-stepper-completed");
+                }
+            }
+        };
+        /**
+         * Select all form navigation buttons, and loop through them.
+         */
+        document.querySelectorAll(".btn-navigate-form-step").forEach((formNavigationBtn) => {
+            /**
+             * Add a click event listener to the button.
+             */
+            formNavigationBtn.addEventListener("click", () => {
+                /**
+                 * Get the value of the step.
+                 */
+                const stepNumber = parseInt(formNavigationBtn.getAttribute("step_number"));
+                /**
+                 * Call the function to navigate to the target form step.
+                 */
+                navigateToFormStep(stepNumber);
             });
         });
     </script>

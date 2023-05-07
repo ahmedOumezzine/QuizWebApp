@@ -99,7 +99,7 @@ namespace QuizWebApp.Controllers
                         resultQuestion.isCorrect = false;
                     }
 
-                    resultQuestion.reponseId = String.Join(", ", reponseId);
+                    resultQuestion.reponseId = String.Join(",", reponseId);
                 }
                 if (question.QuestionType == QuestionType.FillInBlank)
                 {

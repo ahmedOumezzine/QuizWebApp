@@ -23,47 +23,59 @@ score : @percentage %
 @foreach (var item in Model.Select((value, i) => new { i, value }))
 {
 
-    <h2>##</h2>
-    @item.value.Question.QuestionDescription
+    <h2>Question @(item.i+1)</h2>
+    <span> - @item.value.Question.QuestionDescription </span> <span>:</span>
     <br />
     if (item.value.Question.QuestionType == QuizWebApp.Models.QuestionType.FillInBlank)
     {
-        <br />
-        <label>
-            FillInBlank
-        </label> @item.value.Question.FillInBlank
-        <br />
+        <span> @item.value.Question.FillInBlank  </span>
 
         foreach (var Choice in item.value.Question.Choices.GroupBy(x => x.GroupBy))
         {
-            <hr />
-            <label>@Choice.Key</label>
             <br />
-            foreach (var chid in Choice)
-            {
-                <label>@chid.Id @chid.ChoiceText</label>
 
-                @chid.IsCorrect
-                <br />
-            }
+            <span>@Choice.Key</span>
+            <ul>
+                @foreach (var chid in Choice)
+                {
+                    <li>
+                        <label>@chid.ChoiceText</label>
+                        @if (item.value.reponseId.Split(',').Contains(chid.Id.ToString()))
+                        {
+                            <i class="fas fa-dot-circle"></i>
+                        }
+
+                    </li>
+                }
+            </ul>
 
         }
+
     }
     else
     {
-        foreach (var Choice in item.value.Question.Choices)
-        {
-            <label>@Choice.Id @Choice.ChoiceText</label>
-
-            @Choice.IsCorrect
-            <br />
-        }
+        <ul>
+            @foreach (var Choice in item.value.Question.Choices)
+            {
+                <li>
+                    <span> @Choice.ChoiceText </span>
+                    @if (item.value.reponseId.Contains(','))
+                    {
+                        if (item.value.reponseId.Split(',').Contains(Choice.Id.ToString()))
+                        {
+                            <i class="fas fa-dot-circle"></i>
+                        }
+                    }
+                    else
+                    {
+                        if (int.Parse(item.value.reponseId) == Choice.Id)
+                        {
+                            <i class="fas fa-dot-circle"></i>
+                        }
+                    }
+                </li>
+            }
+        </ul>
+        <hr />
     }
-
-    <br />
-
-    @item.value.reponseId
-    <br />
-    @item.value.isCorrect
-    <hr />
 }
