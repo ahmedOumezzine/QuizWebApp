@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Web.Mvc;
 
 namespace QuizWebApp.ViewModels
 {
@@ -57,8 +58,13 @@ namespace QuizWebApp.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
+        [AllowHtml]
+        [Required]
         public string Description { get; set; }
+        [Required]
+        [MaxLength(6)]
         public string Code { get; set; }
         public virtual List<Skill> Skills { get; set; }
         public virtual List<Question> Questions { get; set; }
@@ -69,8 +75,13 @@ namespace QuizWebApp.Models
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [Required]
         public string Name { get; set; }
+        [AllowHtml]
+        [Required]
         public string Description { get; set; }
+        [Required]
+        public int Pourcentage { get; set; }
 
         public int? ExamId { get; set; }
 

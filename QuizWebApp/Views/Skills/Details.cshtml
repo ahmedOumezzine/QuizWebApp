@@ -35,9 +35,16 @@
         <dd>
             @Html.DisplayFor(model => model.Description)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Pourcentage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pourcentage)
+        </dd>
     </dl>
 </div>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", new { ExamId = Model.ExamId })
 </p>

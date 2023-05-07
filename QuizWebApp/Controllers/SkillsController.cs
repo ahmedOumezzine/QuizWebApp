@@ -46,7 +46,7 @@ namespace QuizWebApp.Controllers
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,ExamId")] Skill skill)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,Pourcentage,ExamId")] Skill skill)
         {
             if (ModelState.IsValid)
             {
@@ -79,7 +79,7 @@ namespace QuizWebApp.Controllers
         // plus de détails, consultez https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,ExamId")] Skill skill)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,Pourcentage,ExamId")] Skill skill)
         {
             if (ModelState.IsValid)
             {

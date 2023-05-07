@@ -29,7 +29,18 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model)
+    @if (Model.Count() == 0)
+    {
+        <tr>
+            <td colspan="4">
+                Sorry, no items to display
+            </td>
+        </tr>
+    }
+    else
+    {
+ 
+    foreach (var item in Model)
     {
         <tr>
             <td>
@@ -44,5 +55,6 @@
                 @Html.ActionLink("Delete", "Delete", new { id = item.Id })
             </td>
         </tr>
+    }
     }
 </table>
