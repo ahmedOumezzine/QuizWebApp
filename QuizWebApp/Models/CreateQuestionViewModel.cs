@@ -54,7 +54,7 @@ namespace QuizWebApp.Models
 {
     public class Exam
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -66,7 +66,7 @@ namespace QuizWebApp.Models
 
     public class Skill
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -80,7 +80,7 @@ namespace QuizWebApp.Models
 
     public class Question
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string QuestionDescription { get; set; }
@@ -101,7 +101,7 @@ namespace QuizWebApp.Models
 
     public class Choice
     {
-        [Key]
+        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string ChoiceText { get; set; }

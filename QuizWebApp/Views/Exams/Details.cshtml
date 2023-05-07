@@ -4,7 +4,23 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+@section Navigation{
+
+
+    <li class="nav-item navbar-list__item">
+        <a href="@Url.Action( "Index", "Questions", new { ExamId = Model.Id })"
+           class="nav-link">
+            Questions
+        </a>
+    </li>
+    <li class="nav-item navbar-list__item">
+        <a href="@Url.Action( "Index", "Skills", new { ExamId = Model.Id })"
+           class="nav-link">
+            Skills
+        </a>
+    </li>
+
+}
 
 <div>
     <h4>Exam</h4>
@@ -29,8 +45,6 @@
 </div>
 <p>
 
-    <a href=" @Url.Action( "Index", "Questions", new { ExamId = Model.Id }) ">Questions</a> |
-    <a href=" @Url.Action( "Index", "Skills", new { ExamId = Model.Id }) ">Skills</a> |
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>

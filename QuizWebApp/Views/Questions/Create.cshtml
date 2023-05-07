@@ -3,12 +3,19 @@
 @{
     ViewBag.Title = "Create";
 }
+ 
 
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+@section Navigation{
 
-<h1>Create Question</h1>
+
+    <li>
+        <a href="@Url.Action("Details","Exams", new { id=ViewBag.ExamId })"
+           class="nav-link">
+            Exam
+        </a>
+    </li>
+
+}
 
 <form asp-action="CreateQuestion" method="post" id="form-wizard">
     @Html.AntiForgeryToken()

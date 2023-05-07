@@ -4,7 +4,16 @@
     ViewBag.Title = "welcome to our site";
 }
 
-<h2>Index</h2>
+@section Navigation{
+
+    <li>
+        <a href="@Url.Action("Details","Exams", new { id=ViewBag.ExamId })"
+           class="nav-link">
+            Exam
+        </a>
+    </li>
+
+}
 
 <p>
     @Html.ActionLink("Create New", "Create", new { ExamId = ViewBag.ExamId })
@@ -20,19 +29,20 @@
         <th></th>
     </tr>
 
-    @foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.QuestionDescription)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.QuestionType)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionDescription)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.QuestionType)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 </table>

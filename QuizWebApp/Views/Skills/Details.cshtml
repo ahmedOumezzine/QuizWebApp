@@ -4,8 +4,17 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+@section Navigation{
 
+
+    <li>
+        <a href="@Url.Action("Details","Exams", new { id=ViewBag.ExamId })"
+           class="nav-link">
+            Exam
+        </a>
+    </li>
+
+}
 <div>
     <h4>Skill</h4>
     <hr />

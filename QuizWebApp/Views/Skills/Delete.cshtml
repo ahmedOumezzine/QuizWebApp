@@ -4,7 +4,17 @@
     ViewBag.Title = "Delete";
 }
 
-<h2>Delete</h2>
+@section Navigation{
+
+
+    <li>
+        <a href="@Url.Action("Details","Exams", new { id=ViewBag.ExamId })"
+           class="nav-link">
+            Exam
+        </a>
+    </li>
+
+}
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
@@ -36,12 +46,13 @@
         </dd>
     </dl>
 
-    @using (Html.BeginForm()) {
-    @Html.AntiForgeryToken()
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
 
-    <div class="form-actions no-color">
-        <input type="submit" value="Delete" class="btn btn-default" /> |
-        @Html.ActionLink("Back to List", "Index")
-    </div>
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
     }
 </div>

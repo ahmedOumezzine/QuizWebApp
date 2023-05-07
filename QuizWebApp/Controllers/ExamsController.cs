@@ -1,4 +1,5 @@
 ﻿using QuizWebApp.Models;
+using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
@@ -106,7 +107,16 @@ namespace QuizWebApp.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Exam exam = db.exams.Find(id);
+
+            Exam exam = db.exams.Include(x => x.Questions.Select(y => y.Choices)).Include(x => x.Skills).Where(x => x.Id == id).SingleOrDefault();
+            
+            foreach (var item in exam.Questions.Select(x => x.Choices).ToList())
+            {
+                db.choices.RemoveRange(item);
+
+            }
+            db.questions.RemoveRange(exam.Questions);
+            db.skills.RemoveRange(exam.Skills);
             db.exams.Remove(exam);
             db.SaveChanges();
             return RedirectToAction("Index");

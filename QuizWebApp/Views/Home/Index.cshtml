@@ -3,9 +3,7 @@
 @{
     ViewBag.Title = "Index";
 }
-
-<h2>Index</h2>
-
+ 
 <div class="row mb-lg-8pt">
 
     @foreach (var item in Model)
@@ -24,7 +22,7 @@
                             </div>
                         </div>
                     </div>
-                    <a href="@Url.Action("Details", "Home", new {Id = item.Id})" class="ml-4pt btn btn-link text-secondary">Resume</a>
+                    <a href="@Url.Action("Details", "Home", new {Id = item.Id})" class="ml-4pt btn btn-link text-secondary">Details</a>
                 </div>
             </div>
         </div>

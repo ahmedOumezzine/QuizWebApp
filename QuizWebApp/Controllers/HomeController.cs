@@ -86,7 +86,7 @@ namespace QuizWebApp.Controllers
                     resultQuestion.isCorrect = true;
                     if (reponseId.Length == correctReponse.Count)
                     {
-                        for (int i = 0; i <= correctReponse.Count; i++)
+                        for (int i = 0; i < correctReponse.Count; i++)
                         {
                             if (correctReponse[i].Id != reponseId[i])
                             {
