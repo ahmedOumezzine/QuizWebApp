@@ -20,7 +20,7 @@
 <form asp-action="CreateQuestion" method="post" id="form-wizard">
     @Html.AntiForgeryToken()
     <input type="hidden" name="ExamId" value="@ViewBag.ExamId" />
-    <input type="hidden" name="QuestionType" id="selected-option" value="0" />
+    <input type="hidden" name="QuestionType" id="selected-option" value="" />
     <div class="step1 step open">
         <h2>Etape 1</h2>
 
@@ -28,7 +28,7 @@
 
         <div class=" row form-group ">
             <div class="col-md-2">
-                <div class="main-div active" id="div1" value="@((int)QuizWebApp.Models.QuestionType.SingleChoice)">
+                <div class="main-div" id="div1" value="@((int)QuizWebApp.Models.QuestionType.SingleChoice)">
                     <h6>Single Choice</h6>
                 </div>
             </div>
@@ -60,12 +60,18 @@
                 </div>
             </div>
         </div>
-
+        <span class="text-danger field-validation-error" data-valmsg-for="Code" data-valmsg-replace="true">
+            <span id="question-type-error" class="" style="display: none;">Le champ QuestionType est requis.</span>
+        </span>
         <div class="form-group">
-            <label asp-for="Description"> Question Description</label>
-            <textarea asp-for="QuestionDescription" name="QuestionDescription" class="form-control" style="min-width: 100%"></textarea>
+            <label asp-for="QuestionDescription"> Question Description</label>
+            <textarea asp-for="QuestionDescription" id="QuestionDescription" name="QuestionDescription" class="form-control" style="min-width: 100%"></textarea>
         </div>
 
+        <span class="text-danger field-validation-error" data-valmsg-for="Code" data-valmsg-replace="true">
+            <span id="question-description-error" class="" style="display: none;">Le champ Questiondescription est requis.</span>
+        </span>
+        
         <div class="form-group">
             @Html.LabelFor(model => model.SkillId, "SkillId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
@@ -74,7 +80,7 @@
             </div>
         </div>
 
-        <button class="next">Suivant</button>
+        <button class="next" data-step="1">Suivant</button>
     </div>
     <div class="step2 step">
         <h2>Etape 2</h2>
@@ -142,9 +148,11 @@
                 <div id="responses" class="row"></div>
             </div>
         </div>
-
-        <button class="previous">previous</button>
-        <button class="next">Suivant</button>
+        <span class="text-danger field-validation-error" data-valmsg-for="Code" data-valmsg-replace="true">
+            <span id="question-choice-error" class="" style="display: none;">Le champ choices est requis.</span>
+        </span>
+        <button class="previous" data-step="1">previous</button>
+        <button class="next" data-step="3">Suivant</button>
     </div>
     <div class="step3 step">
         <h2>Etape 3</h2>
@@ -154,7 +162,10 @@
             <textarea asp-for="Explication" name="Explication" class="form-control" style="min-width: 100%"></textarea>
         </div>
 
-        <button class="previous">previous</button>
+        <span class="text-danger field-validation-error" data-valmsg-for="Code" data-valmsg-replace="true">
+            <span id="question-explication-error" class="" style="display: none;">Le champ choices est requis.</span>
+        </span>
+        <button class="previous" data-step="2">previous</button>
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Create</button>
@@ -526,7 +537,59 @@
         nextButtons.forEach((button) => {
             button.addEventListener("click", (e) => {
                 e.preventDefault();
-                if (currentStep < steps.length - 1) {
+                let selectedoption = document.getElementById('selected-option').value;
+                let passNext = false;
+                if (currentStep == 0) {
+                   
+                    if (selectedoption === "") {
+                        console.log("currentStep", currentStep)
+                        $("#question-type-error").show();
+                        passNext = false;
+                    } else {
+                        passNext = true;
+                        $("#question-type-error").hide();
+                    }
+                    let questionDescription = document.getElementById('QuestionDescription').value;
+                    if (questionDescription === "") {
+                        console.log("selectedquestionDescriptionoption", questionDescription)
+                        $("#question-description-error").show();
+                        passNext = false;
+                    } else {
+                        passNext = true;
+                        $("#question-description-error").hide();
+                    }
+                }
+                if (currentStep == 1) {
+
+
+                    let name = "Choices";
+                    if (selectedoption == 4) name = "correctOption";
+                    if (selectedoption == 5) name = "responseOption";
+                    let Choiceslength = $("input[name^='" + name + "']").length;
+                    console.log(Choiceslength)
+                    if (Choiceslength == 0) {
+                        $("#question-choice-error").show();
+                        passNext = false;
+                    } else {
+                        passNext = true;
+                        $("#question-choice-error").hide();
+                    }
+
+                }
+                if (currentStep == 2) {
+
+
+                    let Explication = document.getElementById('Explication').value;
+                    if (Explication === "") {
+                        $("#question-explication-error").show();
+                        passNext = false;
+                    } else {
+                        passNext = true;
+                        $("#question-explication-error").hide();
+                    }
+
+                }
+                if (passNext) {
                     steps[currentStep].classList.remove("open");
                     currentStep++;
                     steps[currentStep].classList.add("open");
